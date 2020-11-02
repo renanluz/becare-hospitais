@@ -26,10 +26,7 @@ export default {
                 cep,
                 location,
             });
-        } else {
-            console.log("Erro - Já existe uma hospital com esse nome.")
-        }
-
+        } 
     
         return res.json(hospital);
     },
@@ -43,17 +40,13 @@ export default {
             res.sendStatus(400)
         }
         const hospital = await Hospital.findByIdAndUpdate(id, { name, phone, address, cep, latitude, longitude })
-        .then(() => res.sendStatus(200))
-        .catch(() => res.sendStatus(400));
         
-        return res.json(hospital);
+        //return res.json(hospital);
     },
 
     async destroy(req: Request, res: Response) {
         const { id } = req.params;
-        const hospital = await Hospital.findByIdAndRemove(id)
-        .then(() => res.sendStatus(200))
-        .catch(() => res.sendStatus(400));
+        const hospital = await Hospital.findByIdAndRemove(id);
 
         return res.json(hospital);
     }

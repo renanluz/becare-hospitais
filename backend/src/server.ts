@@ -8,11 +8,13 @@ mongoose.connect('mongodb+srv://becare:becare@cluster0.qb0pn.mongodb.net/becare?
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false,
 }).then(() => console.log("MongoDB conectado"))
 .catch((err) => console.error("Erro ao conectar com o MongoDB" + err));
 
 app.use(express.json());
 app.use(routes);
+app.use(express.urlencoded({ extended: true }));
 
 app.listen(3333, () => {
     console.log("Servidor rodando em http://127.0.0.1:3333");
