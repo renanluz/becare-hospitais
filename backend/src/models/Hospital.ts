@@ -2,13 +2,26 @@ import mongoose from 'mongoose';
 import PointSchema from './utils/PointSchema';
 
 const hospitalSchema = new mongoose.Schema({
-    name: String,
-    phone: String,
-    address: String,
-    cep: String,
+    name: { 
+        type: String,
+        required: true,
+    },
+    phone: { 
+        type: String,
+        required: true,
+    },
+    address:{ 
+        type: String,
+        required: true,
+    },
+    cep: { 
+        type: String,
+        required: true,
+    },
     location: {
         type: PointSchema,
-        index: '2dsphere'
+        index: '2dsphere',
+        required: true,
     }
 });
 
