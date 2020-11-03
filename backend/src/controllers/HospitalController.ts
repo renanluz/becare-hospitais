@@ -3,8 +3,13 @@ import Hospital from '../models/Hospital';
 
 export default {
     async index(req: Request, res: Response) {
-        const hospitais = await Hospital.find();
-        return res.json(hospitais);
+        try {
+            const hospitais = await Hospital.find();
+
+            return res.json(hospitais);
+        } catch (ex) {
+            throw new Error(ex);
+        }
     },
 
     async create(req: Request, res: Response) {
@@ -12,23 +17,26 @@ export default {
         const { name, phone, address, cep, latitude, longitude } = req.body;
 
         let hospital = await Hospital.findOne({ name });
-        console.log(hospital);
-        if (!hospital) {        
-            const location = {
-                type: 'Point',
-                coordinates: [longitude, latitude],
-            }
-        
-            hospital = await Hospital.create({
-                name, 
-                phone, 
-                address, 
-                cep,
-                location,
-            });
-        } 
-    
-        return res.json(hospital);
+
+        try {
+            if (!hospital) {        
+                const location = {
+                    type: 'Point',
+                    coordinates: [longitude, latitude],
+                }
+            
+                hospital = await Hospital.create({
+                    name, 
+                    phone, 
+                    address, 
+                    cep,
+                    location,
+                });
+            } 
+        } catch (error) {
+            throw new Error(error);
+        }
+        return res.sendStatus(201);
     },
 
     async update(req: Request, res: Response) {
@@ -36,18 +44,28 @@ export default {
         const {name, phone, address, cep, latitude, longitude } = req.body;
 
         const data = req.body;
-        if(! data || !id) {
-            res.sendStatus(400)
+
+        try {
+            if(! data || !id) {
+                res.sendStatus(400)
+            }
+            const hospital = await Hospital.findByIdAndUpdate(id, { name, phone, address, cep, latitude, longitude })
+
+            return res.sendStatus(201);
+        } catch (error) {
+            throw new Error(error)
         }
-        const hospital = await Hospital.findByIdAndUpdate(id, { name, phone, address, cep, latitude, longitude })
-        
-        //return res.json(hospital);
     },
 
     async destroy(req: Request, res: Response) {
         const { id } = req.params;
-        const hospital = await Hospital.findByIdAndRemove(id);
 
-        return res.json(hospital);
-    }
+        try {
+            const hospital = await Hospital.findByIdAndRemove(id);
+
+            return res.sendStatus(201);
+        } catch (error) {
+            throw new Error(error)
+        }
+    },
 }
